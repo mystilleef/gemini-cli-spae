@@ -1,4 +1,4 @@
-# SPAE framework
+# State-persistent atomic execution framework
 
 A Gemini CLI configuration implementing the **SPAE** (State-Persistent
 Atomic Execution) framework—a structured, agent-first workflow for
@@ -107,21 +107,58 @@ The reviewer performs a gap analysis on `PLAN.md` and optimizes it.
 
 Choose one execution mode per `workstream`:
 
-| Command          | Agent      | Use When                                         |
-| ---------------- | ---------- | ------------------------------------------------ |
-| `/run @builder`  | `builder`  | Iterating carefully, one task at a time          |
-| `/run @tdder`    | `tdder`    | Behavioral changes that need test coverage first |
-| `/run @executor` | `executor` | Plan looks solid; execute all tasks at once      |
+<!-- prettier-ignore -->
+| Command | Agent | Use |
+| --- | --- | --- |
+| `/run @builder` | `builder` | One task per cycle |
+| `/run @tdder` | `tdder` | Behavioral changes needing tests first |
+| `/run @executor` | `executor` | Execute all tasks at once |
 
 Repeat `/run @builder` or `/run @tdder` until `PLAN.md` marks all tasks
 complete.
 
 ---
 
+## Non-`SPAE` agents
+
+See `agents` folder for available agents.
+
+### Troubleshooter
+
+Use the troubleshooter agent when a concrete failure needs systematic
+investigation and repair. It invokes the `troubleshoot` skill to
+observe, hypothesize, test, fix, and verify the issue.
+
+```
+/run @troubleshooter fix the biome lint issues
+```
+
+### Worker
+
+Use the worker agent for ad-hoc tasks outside a formal `SPAE`
+`workstream`. It gathers context from the request, discussion, project,
+and environment, then performs the task with the refined context.
+
+```
+/run @worker update the README examples
+```
+
+### Commit
+
+Use the commit agent after a build cycle or focused edit to create
+atomic, well-formed git commits for the current repository. It invokes
+the `auto-commit` skill.
+
+```
+/run @commit
+```
+
+---
+
 ## Artifacts
 
-All artifacts live in `.spae/<workstream>/` and **must not be
-committed**.
+Store all artifacts in `.spae/<workstream>/` and **keep them out of
+commits**.
 
 | File         | Purpose                                            |
 | ------------ | -------------------------------------------------- |
@@ -133,13 +170,13 @@ committed**.
 
 ## Contents
 
-| Directory   | Contents                                                                                                                              |
-| ----------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| `agents/`   | scout, planner, reviewer, builder, `tdder`, executor + utility agents                                                                 |
-| `skills/`   | Reusable procedures: spae-spec, spae-plan, spae-review, spae-build, spae-tdd, spae-execute, refactor, coverage, auto-commit, and more |
-| `kbase/`    | Protocol guides: `SPAE` framework, efficiency, E-Prime, git, shell scripting, and more                                                |
-| `hooks/`    | `context-orchestrator.sh` (safety baseline) and `rtk-hook-gemini.sh` (token efficiency)                                               |
-| `commands/` | `/run` subagent orchestrator and `/syd` directive inspector                                                                           |
+| Path | Contents |
+| ---- | -------- |
+| `agents/` | Core `SPAE`, troubleshooting, worker, and commit agents |
+| `skills/` | Reusable workflows for `SPAE`, refactoring, and commits |
+| `kbase/` | Protocol guides for `SPAE`, efficiency, E-Prime, and git |
+| `hooks/` | Safety baseline and token-efficiency shell hooks |
+| `commands/` | `/run` subagent orchestrator and `/syd` inspector |
 
 ---
 
@@ -147,12 +184,4 @@ committed**.
 
 - Read `.spae/<workstream>/PLAN.md` between build cycles to confirm task
   completion
-- Use `@worker` for ad-hoc tasks outside a formal `SPAE` `workstream`:
-  ```
-  /run @worker use troubleshoot skill to fix the biome lint issues
-  ```
-- Use `@commit` after a build cycle for atomic, well-formed git commits:
-  ```
-  /run @commit
-  ```
 - Consult `kbase/spae-framework.md` for the full protocol specification
