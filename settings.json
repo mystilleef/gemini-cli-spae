@@ -1,0 +1,141 @@
+{
+  "experimental": {
+    "jitContext": true,
+    "extensionReloading": true,
+    "modelSteering": true,
+    "worktrees": true,
+    "topicUpdateNarration": true,
+    "memoryManager": true,
+    "taskTracker": true,
+    "dynamicModelConfiguration": true,
+    "agentHistoryTruncation": true,
+    "agentHistorySummarization": true,
+    "contextManagement": true,
+    "generalistProfile": true,
+    "voiceMode": true,
+    "voice": {
+      "activationMode": "toggle"
+    }
+  },
+  "general": {
+    "enableNotifications": false,
+    "previewFeatures": true,
+    "enableAutoUpdate": false,
+    "enableAutoUpdateNotification": false,
+    "preferredEditor": "nvim",
+    "checkpointing": {
+      "enabled": true
+    },
+    "notificationMethod": "auto",
+    "defaultApprovalMode": "auto_edit"
+  },
+  "context": {
+    "fileName": [
+      "GEMINI.md",
+      "AGENTS.md"
+    ],
+    "loadMemoryFromIncludeDirectories": true,
+    "includeDirectories": [
+      "~/.gemini/kbase"
+    ]
+  },
+  "model": {
+    "disableLoopDetection": true,
+    "compressionThreshold": 0.33,
+    "name": "auto-gemini-3"
+  },
+  "modelConfigs": {
+    "customAliases": {
+      "base": {
+        "modelConfig": {
+          "generateContentConfig": {
+            "temperature": 0,
+            "topP": 0.9
+          }
+        }
+      },
+      "chat-base": {
+        "extends": "base",
+        "modelConfig": {
+          "generateContentConfig": {
+            "temperature": 0.1
+          }
+        }
+      }
+    }
+  },
+  "ui": {
+    "hideTips": true,
+    "footer": {
+      "hideSandboxStatus": true,
+      "hideContextPercentage": false
+    },
+    "showModelInfoInChat": true,
+    "useAlternateBuffer": true,
+    "showLineNumbers": false,
+    "showUserIdentity": false,
+    "showShortcutsHint": false,
+    "inlineThinkingMode": "full",
+    "compactToolOutput": true,
+    "loadingPhrases": "witty",
+    "terminalBuffer": true
+  },
+  "tools": {
+    "autoAccept": true
+  },
+  "security": {
+    "auth": {
+      "selectedType": "oauth-personal"
+    },
+    "enablePermanentToolApproval": true,
+    "autoAddToPolicyByDefault": true
+  },
+  "mcpServers": {
+    "vibe-check-mcp": {
+      "trust": true,
+      "command": "npx",
+      "args": [
+        "-y",
+        "@pv-bhat/vibe-check-mcp",
+        "start",
+        "--stdio"
+      ]
+    }
+  },
+  "hooks": {
+    "BeforeAgent": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "name": "context-orchestrator",
+            "type": "command",
+            "command": "~/.gemini/hooks/context-orchestrator.sh",
+            "description": "Inject reminders into agent context"
+          }
+        ]
+      }
+    ],
+    "BeforeTool": [
+      {
+        "matcher": "run_shell_command",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.gemini/hooks/rtk-hook-gemini.sh"
+          }
+        ]
+      }
+    ]
+  },
+  "agents": {
+    "overrides": {
+      "browser_agent": {
+        "enabled": true
+      }
+    },
+    "browser": {
+      "headless": true
+    }
+  }
+}
