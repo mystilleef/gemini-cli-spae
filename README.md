@@ -1,4 +1,4 @@
-# State persistent atomic execution
+# SPAE framework
 
 A Gemini CLI configuration implementing the **SPAE** (State-Persistent
 Atomic Execution) framework—a structured, agent-first workflow for
