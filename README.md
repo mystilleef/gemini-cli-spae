@@ -157,8 +157,8 @@ the `auto-commit` skill.
 
 ## Artifacts
 
-Store all artifacts in `.spae/<workstream>/` and **keep them out of
-commits**.
+The framework stores all artifacts in `.spae/<workstream>/`. Add
+`.spae/` to your global `.gitignore` to prevent committing them.
 
 | File         | Purpose                                            |
 | ------------ | -------------------------------------------------- |
@@ -170,13 +170,13 @@ commits**.
 
 ## Contents
 
-| Path | Contents |
-| ---- | -------- |
-| `agents/` | Core `SPAE`, troubleshooting, worker, and commit agents |
-| `skills/` | Reusable workflows for `SPAE`, refactoring, and commits |
-| `kbase/` | Protocol guides for `SPAE`, efficiency, E-Prime, and git |
-| `hooks/` | Safety baseline and token-efficiency shell hooks |
-| `commands/` | `/run` subagent orchestrator and `/syd` inspector |
+| Path        | Contents                                                 |
+| ----------- | -------------------------------------------------------- |
+| `agents/`   | Core `SPAE`, troubleshooting, worker, and commit agents  |
+| `skills/`   | Reusable workflows for `SPAE`, refactoring, and commits  |
+| `kbase/`    | Protocol guides for `SPAE`, efficiency, E-Prime, and git |
+| `hooks/`    | Safety baseline and token-efficiency shell hooks         |
+| `commands/` | `/run` subagent orchestrator and `/syd` inspector        |
 
 ---
 
