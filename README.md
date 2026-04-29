@@ -1,4 +1,4 @@
-# gemini-cli-spae
+# State persistent atomic execution
 
 A Gemini CLI configuration implementing the **SPAE** (State-Persistent
 Atomic Execution) framework—a structured, agent-first workflow for
@@ -19,6 +19,19 @@ hooks, and a knowledge base around a four-phase workflow: **spec → plan
 - Enforcing phase boundaries so each agent reads only what it needs
 - Allowing any harness (Gemini, Claude, OpenAI) to resume work at any
   point
+
+---
+
+## Framework design
+
+- **Harness agnostic**—use any combination of Gemini, Claude, OpenAI, or
+  Codex at each phase
+- **Zero-knowledge resumption**—any agent resumes any `workstream` by
+  reading the artifacts
+- **Atomic execution**—every task stays small enough to verify in a
+  single cycle
+- **Human oversight**—you invoke each phase; nothing progresses
+  automatically
 
 ---
 
@@ -115,19 +128,6 @@ committed**.
 | `STATE.json` | Execution cursor—tracks phase and active task      |
 | `SPEC.md`    | Normalized requirements—immutable during execution |
 | `PLAN.md`    | Atomic task graph—immutable during execution       |
-
----
-
-## Framework design
-
-- **Harness agnostic**—use any combination of Gemini, Claude, OpenAI, or
-  Codex at each phase
-- **Zero-knowledge resumption**—any agent resumes any `workstream` by
-  reading the artifacts
-- **Atomic execution**—every task stays small enough to verify in a
-  single cycle
-- **Human oversight**—you invoke each phase; nothing progresses
-  automatically
 
 ---
 
