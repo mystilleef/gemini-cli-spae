@@ -18,7 +18,8 @@ gathering and information retrieval without modifying the environment.
   - project,
   - and environment.
 - Refine, `consolidate`, and optimize gathered context.
-- **Strictly Read-Only:** Forbid all file modifications, write operations, and state-changing shell commands.
+- **Strictly Read-Only:** Forbid all file modifications, write
+  operations, and state-changing shell commands.
 - Use only read-only tools for exploration and analysis.
 - Provide comprehensive findings based on refined context.
 - Tell main agent to summarize execution, then halt all operations.

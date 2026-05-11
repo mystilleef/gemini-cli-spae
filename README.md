@@ -5,8 +5,8 @@ Atomic Execution) framework—a structured, agent-first workflow for
 high-quality, predictable `LLM` outputs.
 
 The configuration symlinks to `~/.gemini/` and organizes agents, skills,
-hooks, and a knowledge base around a four-phase workflow: **spec → plan
-→ review → build**.
+hooks, and a knowledge base around a five-phase workflow: **spec → plan
+→ inspect → execution → verify**.
 
 ---
 
@@ -41,6 +41,10 @@ hooks, and a knowledge base around a four-phase workflow: **spec → plan
   features)
 - **RTK** (optional)—install [rtk-ai/rtk](https://github.com/rtk-ai/rtk)
   to enable the token-efficiency hook
+- **Context Mode** (optional)—install
+  [mksglu/context-mode](https://github.com/mksglu/context-mode) to
+  enable the context-window protection hook and knowledge base state
+  management
 
 ---
 
@@ -68,10 +72,10 @@ write only their designated outputs.
 
 ### Phase 1: Spec
 
-The scout agent distills your request into unambiguous requirements.
+The spec agent distills your request into unambiguous requirements.
 
 ```
-/run @scout implement <your feature or request>
+/run @spec implement <your feature or request>
 ```
 
 **Output:** `.spae/<workstream>/SPEC.md`, `STATE.json` (phase: plan)
@@ -84,38 +88,51 @@ The planner decomposes `SPEC.md` into a directed acyclic graph (`DAG`)
 of atomic tasks.
 
 ```
-/run @planner
+/run @plan
 ```
 
-**Output:** `.spae/<workstream>/PLAN.md`, `STATE.json` (phase: review)
+**Output:** `.spae/<workstream>/PLAN.md`, `STATE.json` (phase: inspect)
 
 ---
 
-### Phase 3: Review
+### Phase 3: Inspect
 
-The reviewer performs a gap analysis on `PLAN.md` and optimizes it.
+The inspector performs a gap analysis on `PLAN.md` and optimizes it.
 
 ```
-/run @reviewer
+/run @inspect
 ```
 
 **Output:** Optimized `PLAN.md`, `STATE.json` (phase: build)
 
 ---
 
-### Phase 4: Build
+### Phase 4: Execution
 
 Choose one execution mode per `workstream`:
 
 <!-- prettier-ignore -->
 | Command | Agent | Use |
 | --- | --- | --- |
-| `/run @builder` | `builder` | One task per cycle |
-| `/run @tdder` | `tdder` | Behavioral changes needing tests first |
-| `/run @executor` | `executor` | Execute all tasks at once |
+| `/run @build` | `build` | One task per cycle |
+| `/run @tdd` | `tdd` | Behavioral changes needing tests first |
+| `/run @execute` | `execute` | Execute all tasks at once |
 
-Repeat `/run @builder` or `/run @tdder` until `PLAN.md` marks all tasks
+Repeat `/run @build` or `/run @tdd` until `PLAN.md` marks all tasks
 complete.
+
+---
+
+### Phase 5: Verify
+
+The arbiter compares the implementation against `SPEC.md`.
+
+```
+/run @verify
+```
+
+**Output:** `STATE.json` (status: completed) or `VERIFY.md` (if gaps
+found)
 
 ---
 
@@ -123,24 +140,24 @@ complete.
 
 See `agents` folder for available agents.
 
-### Troubleshooter
+### Troubleshoot
 
-Use the troubleshooter agent when a concrete failure needs systematic
+Use the troubleshoot agent when a concrete failure needs systematic
 investigation and repair. It invokes the `troubleshoot` skill to
 observe, hypothesize, test, fix, and verify the issue.
 
 ```
-/run @troubleshooter fix the biome lint issues
+/run @troubleshoot fix the biome lint issues
 ```
 
-### Worker
+### Work
 
-Use the worker agent for ad-hoc tasks outside a formal `SPAE`
+Use the work agent for ad-hoc tasks outside a formal `SPAE`
 `workstream`. It gathers context from the request, discussion, project,
 and environment, then performs the task with the refined context.
 
 ```
-/run @worker update the README examples
+/run @work update the README examples
 ```
 
 ### Commit
@@ -152,6 +169,16 @@ the `auto-commit` skill.
 ```
 /run @commit
 ```
+
+### Specialized agents
+
+- **`@coverage`**: Analyzes and improves test coverage
+- **`@document`**: Generates and maintains documentation
+- **`@inspect`**: Analyzes code structure and architecture
+- **`@purify`**: Simplifies code and removes redundancies
+- **`@query`**: Interrogates the codebase and knowledge base
+- **`@refactor`**: Executes structural code improvements
+- **`@verify`**: Validates task completion and correctness
 
 ---
 
@@ -165,18 +192,19 @@ The framework stores all artifacts in `.spae/<workstream>/`. Add
 | `STATE.json` | Execution cursor—tracks phase and active task      |
 | `SPEC.md`    | Normalized requirements—immutable during execution |
 | `PLAN.md`    | Atomic task graph—immutable during execution       |
+| `VERIFY.md`  | Ephemeral signal—created when verification fails   |
 
 ---
 
 ## Contents
 
-| Path        | Contents                                                 |
-| ----------- | -------------------------------------------------------- |
-| `agents/`   | Core `SPAE`, troubleshooting, worker, and commit agents  |
-| `skills/`   | Reusable workflows for `SPAE`, refactoring, and commits  |
-| `kbase/`    | Protocol guides for `SPAE`, efficiency, E-Prime, and git |
-| `hooks/`    | Safety baseline and token-efficiency shell hooks         |
-| `commands/` | `/run` subagent orchestrator and `/syd` inspector        |
+| Path        | Contents                                                |
+| ----------- | ------------------------------------------------------- |
+| `agents/`   | Core `SPAE`, troubleshooting, worker, and commit agents |
+| `skills/`   | Specialized workflows (markdown, shell, review, skills) |
+| `kbase/`    | Protocols (efficiency, E-Prime, UI/UX, `SPAE`, context) |
+| `hooks/`    | Safety, token-efficiency, and context-window hooks      |
+| `commands/` | `/run` subagent orchestrator and `/syd` inspector       |
 
 ---
 

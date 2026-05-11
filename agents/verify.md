@@ -1,6 +1,7 @@
 ---
 name: verify
-description: Verifies implementation against SPEC.md using the spae-verify skill.
+description:
+  Verifies implementation against SPEC.md using the spae-verify skill.
 model: gemini-3.1-pro-preview
 max_turns: 100
 timeout_mins: 30
