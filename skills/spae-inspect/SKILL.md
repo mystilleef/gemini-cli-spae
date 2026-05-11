@@ -1,51 +1,51 @@
 ---
-name: spae-plan
+name: spae-inspect
 description:
-  Task Decomposition for the `SPAE` framework. Decomposes `SPEC.md` into
-  a `DAG` of atomic tasks in `PLAN.md`.
+  Optimization & Verification for the `SPAE` framework. Performs gap
+  analysis on `PLAN.md`.
 user-invocable: true
 argument-hint: "[optional-workstream-name] e.g. 'user-auth'"
 ---
 
-# Plan (`SPAE`)
+# Inspect (`SPAE`)
 
-**Goal**: decompose `SPEC.md` into a Directed Acyclic Graph (`DAG`) of
-atomic tasks in `PLAN.md`.
+**Goal**: fix gaps between `SPEC.md` and `PLAN.md`.
 
 ## When to use
 
-- When `SPEC.md` exists and requires a new plan.
-- When `STATE.json` reaches `phase: plan`.
+- When `STATE.json` reaches `phase: inspect`.
+- To refine `PLAN.md` based on codebase context or technical
+  constraints.
 
 ## Process
 
 1. **Initialize**: Resolve the `workstream` via the provided name or the
-   `.spae/current` symlink. Read `SPEC.md`.
+   `.spae/current` symlink. Read `SPEC.md` and `PLAN.md`.
 2. **Execute**:
-   - Decompose `SPEC.md` into a Directed Acyclic Graph (`DAG`) of atomic
-     tasks.
-   - Order tasks by dependency and risk, ensuring each leaves the system
-     in a working state.
-   - Define clear acceptance criteria and verification steps for each
-     task.
+   - Perform gap analysis between `SPEC.md`, `PLAN.md`, and the
+     codebase.
+   - Identify concrete bugs, regressions, or weak verification steps.
+   - Refine `PLAN.md` with minimal, high-impact changes.
    - Use `vibe_check` to refine your solutions.
 3. **Finalize**:
-   - Write `PLAN.md`.
-   - Initialize the `tasks` registry and update `phase: inspect` in
-     `STATE.json`.
+   - Write the optimized `PLAN.md`.
+   - Update `STATE.json` (phase: `build`, cursor: `T-001`, status:
+     `todo`).
    - Output the standardized **Execution Summary** and **Phase
-     Transition Feedback** (Next Phase: `/inspect`).
+     Transition Feedback** (Next Phase: `/build`, `/tdd`, or
+     `/execute`).
 
 ## Verification
 
-- `PLAN.md` exists with atomic, verifiable tasks.
-- `STATE.json` reflects the new tasks and `phase: "inspect"`.
+- `PLAN.md` reflects optimizations and aligns with `SPEC.md`.
+- `STATE.json` reaches `phase: build`.
 
 ## Rules
 
 - Optimize all operations for agent, token, and context efficiency.
-- Write `PLAN.md` for maximal signal with minimal tokens.
-- Order tasks by dependency and risk; slice vertically.
+- Write inspection findings and `PLAN.md` refinements for maximal
+  signal.
+- Prevent process inflation; avoid turning this into a heavyweight gate.
 - Treat repository source code as read-only.
 - **Write Boundaries**: Exercise exclusive authority to edit
   `.spae/current/PLAN.md` and `.spae/current/STATE.json`.
@@ -72,16 +72,16 @@ atomic tasks in `PLAN.md`.
 - **Findings**:
   - [List of terse summary of key gaps, risks, or architectural notes]
 - **Summary**:
-  - [List of terse summary of plan]
+  - [List of terse summary of revised plan]
 ```
 
 ### Phase transition feedback
 
 ```md
 > **SPAE Status** • `workstream-name`
-> **Phase Complete**: `/plan`
-> **Next Phase**: `/inspect`
+> **Phase Complete**: `/inspect`
+> **Next Phase**: `/build`, `/tdd`, or `/execute`
 >
-> _Run `/inspect` next._
+> _Run `/build`, `/tdd`, or `/execute` next._
 ```
 <!-- prettier-ignore-end -->

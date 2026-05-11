@@ -18,14 +18,11 @@ Fix, refine, `consolidate`, condense, and optimize markdown files.
 
 ## Process
 
-### 1. Target & baseline:
+### 1. Target & baseline
 
 - Identify files from arguments or context.
-- Execute `fix-markdown` to establish a clean state.
-- If `fix-markdown` reports `WARN` and no further efficiency edits
-  remain, report `WARN: no markdown changes needed` and exit.
 
-### 2. Efficiency optimization:
+### 2. Prose optimization
 
 For each file:
 
@@ -36,9 +33,9 @@ For each file:
 - Optimize prose and structure for token and context efficiency.
 - Preserve clarity and intent.
 
-### 3. Verification & reporting:
+### 3. Verification & reporting
 
-- Execute `fix-markdown` for final compliance.
+- Run `fix-markdown` skill to fix prose and lint issues.
 - Report `SUCCESS: optimized markdown at <paths>` or `ERROR` on failure.
 
 ## Verification
@@ -53,6 +50,6 @@ For each file:
 - Optimize all operations for agent, token, and context efficiency.
 - Batch operations on file groups; avoid one-file-at-a-time loops.
 - Use parallel execution when possible.
-- Target only relevant markdown files.
+- Target only relevant markdown files in the current project.
 - Preserve user intent, code examples, links, and `frontmatter`.
 - Never hide failures from sub-skills or `formatters`.

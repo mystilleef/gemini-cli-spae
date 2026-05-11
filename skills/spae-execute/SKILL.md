@@ -9,47 +9,31 @@ argument-hint: "[optional-workstream-name] e.g. 'user-auth'"
 
 # Execute (`SPAE`)
 
-Your goal: execute all tasks from the `.spae/[workstream]/PLAN.md` file
-in a single invocation.
+**Goal**: execute all tasks from `PLAN.md` sequentially.
 
 ## When to use
 
-- After `/review` completes and `STATE.json` reaches `phase: build`.
-- To execute all remaining tasks in the plan sequentially for low-risk
-  or routine `workstreams`.
+- When `STATE.json` reaches `phase: build`.
+- To execute all remaining tasks in the plan for low-risk or routine
+  `workstreams`.
 
 ## Process
 
-1. **Resolve `workstream`**:
-   - If an optional `[workstream-name]` appears, use
-     `.spae/[workstream-name]/`.
-   - If omitted, follow `.spae/current` symlink.
-2. **Execution Loop**:
-   - Read `STATE.json` to find `cursor.active_task_id`.
-   - Read the corresponding task details from `PLAN.md`.
-   - **Execute task**:
-     - Write the smallest useful slice.
-     - Use the smallest useful implementation change set that satisfies
-       the active task.
-     - Read and edit only files required for the active task.
-     - Avoid incidental refactors, cleanup, or adjacent improvements
-       unless the task explicitly requires them.
-     - **Metacognitive oversight (optional)**: If `vibe_check` is
-       available AND the task involves high complexity or system
-       modification, invoke it (phase: `implementation`) to verify
-       alignment with task boundaries.
-     - Add tests and run project checks.
-     - Keep verification focused on the task's acceptance criteria and
-       stated checks.
-     - Verify outcome using the steps in `PLAN.md`.
-   - **Update state**:
-     - Mark task as `done` in `STATE.json`.
-     - Advance `cursor.active_task_id` to the next task.
-     - Update `metrics`.
-   - **Repeat**: Continue the loop for the next task until all tasks
-     reach `done`.
-3. **Completion**: Report the outcome, key verification evidence for the
-   completed plan, and final state.
+1. **Initialize**: Resolve the `workstream` via the provided name or the
+   `.spae/current` symlink. Read `STATE.json` and `PLAN.md` to identify
+   the remaining tasks.
+2. **Execute**:
+   - Process all tasks in the plan sequentially.
+   - Write the minimal code changes required for each task's acceptance
+     criteria.
+   - Restrict edits to relevant files; avoid incidental refactoring.
+   - Use `vibe_check` for complex tasks.
+   - Add required tests and run the verification steps for each task.
+3. **Finalize**:
+   - Mark all completed tasks `done` and update metrics in `STATE.json`.
+   - Set `phase: verify` upon completing the plan.
+   - Output the standardized **Execution Summary** and **Comprehensive
+     Execution Feedback**.
 
 ## Verification
 
@@ -60,12 +44,46 @@ in a single invocation.
 ## Rules
 
 - Optimize all operations for agent, token, and context efficiency.
-- Execute tasks with maximal signal, minimal edits, and only essential
-  context.
+- Execute tasks with maximal signal and minimal edits.
 - Execute all tasks sequentially in a single invocation.
-- This phase holds exclusive authority to edit source code and other
-  non-`SPAE` project files.
-- Never edit `PLAN.md` during this phase.
+- **Write Boundaries**: Exercise exclusive authority to edit source code
+  and non-`SPAE` project files.
+- **Forbidden Writes**: Never edit `PLAN.md` or `SPEC.md` during this
+  phase.
 - If any task fails, report the blocker, halt execution, and leave
   remaining tasks as `todo`.
-- STATUS: SUCCESS on completion of all tasks.
+- STATUS: SUCCESS on completion.
+
+## Standardized feedback
+
+- Keep feedback prose terse, concise, and precise.
+- Optimize prose for token and context efficiency.
+- If needed, split findings and summary into terse bullet points.
+
+### Execution summary
+
+<!-- prettier-ignore-start -->
+```md
+### Execution summary
+
+- **Actions**:
+  - [List of terse, short, compact, condensed summary of actions taken]
+- **Files**:
+  - [List of modified or created files]
+- **Findings**:
+  - [List of terse summary of key gaps, risks, or architectural notes]
+- **Summary**:
+  - [List of terse summary of changes]
+```
+
+### Comprehensive execution feedback
+
+```md
+> **SPAE Status** • `workstream-name`
+> **Progress**: All [X] tasks completed
+> **Completed**: `T-001` through `T-XXX`
+> **Next Phase**: `/verify`
+>
+> _Run `/verify` next._
+```
+<!-- prettier-ignore-end -->

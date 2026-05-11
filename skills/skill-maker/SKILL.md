@@ -1,12 +1,12 @@
 ---
-name: skill-creator
+name: skill-maker
 description:
   "Creates a new agent skill optimized for token and context efficiency."
 user-invocable: true
 argument-hint: "<skill name> and <description or instructions>"
 ---
 
-# Skill creator
+# Skill maker
 
 ## When to use
 

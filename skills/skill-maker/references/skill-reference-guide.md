@@ -141,7 +141,7 @@ efficiency:
 Adhere to the POSIX-compliant shell scripting guide in the knowledge
 base when writing shell scripts.
 
-- `$HOME/.gemini/kbase/shell-scripting-guide.md`
+- `llm-kbase/shell-scripting-guide.md`
 
 **Fallback**: when the guide remains unavailable, apply standard POSIX
 best practices:

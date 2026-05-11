@@ -26,18 +26,42 @@ atomic commits for the current project.
    changes. Isolate `.gitignore` changes into their own commit.
    - **Shortcut**: If exactly one tracked `unstaged` file exists, stage
      and commit it immediately.
-3. **Loop through Groups**:
+3. **Sensitive Data Gate**: For each atomic group, scan candidate
+   paths/content before staging and scan the staged diff before commit.
+   Check only current candidate files. Hard-block any path or diff
+   matching likely secrets:
+   - **Paths**: `.env*` except `.env.example`, `*.key`, `*.pem`,
+   `*.p12`, `*.pfx`, `*_rsa`, `*_dsa`, `id_*`, `secrets.*`,
+   `credentials.*`, `.aws/`, `.ssh/`, `.gnupg/`.
+   <!-- vale off -->
+
+   - **Content**: Flag secret-like assignments or credential values, not
+     policy text that merely names secret types. Match indicators such
+     as `password=...`, `token: ...`, `api_key = ...`, `Bearer <value>`,
+     cloud/GitHub/Slack/OpenAI token prefixes with non-placeholder
+     values, or private key blocks. Do not block documentation that only
+     lists secret rule names or examples without real values.
+
+   <!-- vale on -->
+   - **On match**: remove affected files from staging with
+     `git restore --staged -- <files>`, halt, and report only file paths
+     plus matched rule names. Never print secret values, ask for
+     override, or commit flagged files.
+
+4. **Loop through Groups**:
    1. **Analyze Group**: Use
       `git --no-pager diff --no-ext-diff --stat --minimal --patience --histogram --find-renames --summary --no-color -U10 <file_group>`
       to understand the changes.
-   2. **Stage**: Execute `git add <file1> <file2> ...`.
+   2. **Stage**: After the pre-stage sensitive data scan passes, execute
+      `git add <file1> <file2> ...`.
    3. **Message**: Generate a conventional commit message based on
       `references/conventional-commit.md`.
-   4. **Commit**: Execute `git commit -m "<message>"`.
+   4. **Commit**: After the staged-diff sensitive data scan passes,
+      execute `git commit -m "<message>"`.
    5. **Verify**: Verify the commit succeeded. If `ERROR`, halt and
       report.
-4. **Repeat**: Continue until achieving a clean working tree.
-5. **Final Status**: Output a concise summary of the commits created
+5. **Repeat**: Continue until achieving a clean working tree.
+6. **Final Status**: Output a concise summary of the commits created
    (for example, a list of commit hashes and subjects) to confirm
    successful execution.
 
@@ -67,3 +91,24 @@ atomic commits for the current project.
   - Reduce token usage.
 - **Safety**: Intelligently handle `untracked` files and avoid staging
   sensitive or build-related files (refer to `atomic-git-staging.md`).
+
+## Standardized feedback
+
+<!-- prettier-ignore-start -->
+```md
+### Execution Summary
+
+- **Actions**:
+  - [List of terse, short, compact, condensed summary of actions taken]
+- **Files**:
+  - [List of modified or created files]
+- **Findings**:
+  - [List of terse summary of key gaps, risks, or architectural notes]
+- **Commits**:
+  - [List of commit summaries]
+
+> **Commit Status** • `[Scope]`
+> **Result**: [`Committed` | `Clean Tree` | `Failed`]
+> **Status**: [Working tree summary]
+```
+<!-- prettier-ignore-end -->
