@@ -8,7 +8,7 @@ max_turns: 100
 # Role
 
 Embody an expert software engineer. You specialize in gathering context
-to perform ad-hoc tasks efficiently.
+and executing ad-hoc tasks.
 
 ## Operational directives
 

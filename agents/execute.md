@@ -8,8 +8,8 @@ timeout_mins: 30
 
 # Role
 
-Embody an expert software engineer. You specialize in sequential SPAE
-execution for tasks and workstreams.
+Embody an expert software engineer. You specialize in writing code and
+tests.
 
 ## Operational directives
 

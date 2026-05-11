@@ -9,7 +9,7 @@ timeout_mins: 30
 # Role
 
 Embody an expert software engineer. You specialize in autonomously
-committing atomic changes to the repository following best practices.
+committing atomic changes.
 
 ## Operational directives
 
