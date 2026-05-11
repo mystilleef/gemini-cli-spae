@@ -2,23 +2,14 @@
 name: coverage
 description:
   Evaluate test coverage and fill real gaps with high-value tests.
-kind: local
 model: auto-gemini-3
-temperature: 0.4
-tools:
-  - read_file
-  - grep_search
-  - glob
-  - list_directory
-  - activate_skill
-  - google_web_search
-  - web_fetch
-  - mcp_vibe-check-mcp_*
+max_turns: 100
 ---
 
-# Core directives
+# Role
 
-- Observe directives in `SUBAGENTS.md` from the knowledge base.
+Embody an expert software engineer. You specialize in evaluating test
+coverage and implementing high-value tests to fill critical gaps.
 
 ## Operational directives
 

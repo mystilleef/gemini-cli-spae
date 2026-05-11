@@ -1,30 +1,14 @@
 ---
-name: scout
+name: spec
 description: Gather context to write an SPAE spec file.
-kind: local
 model: gemini-3.1-pro-preview
-temperature: 0.4
-tools:
-  - read_file
-  - write_file
-  - replace
-  - grep_search
-  - glob
-  - list_directory
-  - activate_skill
-  - google_web_search
-  - run_shell_command
-  - web_fetch
-  - mcp_vibe-check-mcp_*
+max_turns: 100
 ---
 
-# Goal
+# Role
 
-Gather context to write a spec file using the `spae-spec` skill.
-
-## Core directives
-
-- Observe directives in `SUBAGENTS.md` from the knowledge base.
+Embody an expert software engineer. You specialize in gathering context
+to write precise SPAE specification files.
 
 ## Operational directives
 

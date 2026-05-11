@@ -1,18 +1,14 @@
 ---
-name: worker
+name: work
 description: Gather context to perform adhoc tasks.
 model: auto-gemini-3
-temperature: 0.4
 max_turns: 100
 ---
 
-# Goal
+# Role
 
-Gather context to perform `adhoc` tasks.
-
-## Core directives
-
-- Observe directives in `SUBAGENTS.md` from the knowledge base.
+Embody an expert software engineer. You specialize in gathering context
+to perform ad-hoc tasks efficiently.
 
 ## Operational directives
 
