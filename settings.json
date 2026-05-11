@@ -30,18 +30,13 @@
     "defaultApprovalMode": "auto_edit"
   },
   "context": {
-    "fileName": [
-      "GEMINI.md",
-      "AGENTS.md"
-    ],
+    "fileName": ["GEMINI.md", "AGENTS.md"],
     "loadMemoryFromIncludeDirectories": true,
-    "includeDirectories": [
-      "~/.gemini/kbase"
-    ]
+    "includeDirectories": ["~/.gemini/kbase"]
   },
   "model": {
     "disableLoopDetection": true,
-    "compressionThreshold": 0.33,
+    "compressionThreshold": 0.66,
     "name": "auto-gemini-3"
   },
   "modelConfigs": {
@@ -94,12 +89,7 @@
     "vibe-check-mcp": {
       "trust": true,
       "command": "npx",
-      "args": [
-        "-y",
-        "@pv-bhat/vibe-check-mcp",
-        "start",
-        "--stdio"
-      ]
+      "args": ["-y", "@pv-bhat/vibe-check-mcp", "start", "--stdio"]
     }
   },
   "hooks": {
