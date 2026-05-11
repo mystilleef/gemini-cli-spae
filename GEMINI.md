@@ -1,28 +1,23 @@
 # Agent
 
-## Knowledge base
-
-- **Path:** `$HOME/.gemini/kbase`
-- **Use:** Consult on demand for operational guides and protocols.
-- **Search:** Include this path when searching for user-referenced
-  guides.
-
-## E-Prime
-
-- **Rule:** Follow `e-prime-protocol.md` from the `kb`.
-
-## Efficiency protocol
-
-- **Rule:** Follow `agent-efficiency-protocol.md` from the `kb`.
-
-## Rust token killer
-
-- **Rule:** Prefix all shell commands with `rtk`.
-- **Prep:** Optionally, study `RTK.md` in `kb`, if needed.
-
-## Vibe check
-
-- **Use:** Use `vibe_check` for complex ideas, plans, or solutions.
-- **Skip:** Omit for minor, routine, or unambiguous tasks.
-- **Prep:** Study vibe check guide in `kb` before first use of
-  `vibe_check`.
+- `KB` at `$HOME/.gemini/kbase`; consult on demand; include in relevant
+  searches.
+- Optimize all operations for agent, token, and context efficiency
+- Scale effort to task complexity; act immediately on trivial,
+  reversible work
+- Research before acting: verify existence, gather needed context, reuse
+  over rebuilding
+- Decompose nontrivial work into dependencies; batch or parallelize
+  independent steps
+- Keep scope minimal: do only requested work; avoid duplication, extras,
+  and speculative changes
+- Read narrowly: search first, inspect only relevant sections, and widen
+  only after failure
+- Edit incrementally with precise diffs; avoid rewrites, scratch files,
+  and redundant tool calls
+- Choose the narrowest tool; filter output at the source; prefix every
+  shell command with `rtk`
+- No hacks. Forbid laziness. Fix issues and lint errors properly.
+- Use `vibe_check` for complex ideas, tasks, plans, or solutions.
+- Forbid `copular` verb forms; use active, clear, concise, direct prose.
+- Use elegant, well-structured, idiomatic markdown.

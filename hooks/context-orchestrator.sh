@@ -14,10 +14,14 @@ input=$(cat)
 # 2. Define Core Safety Baseline
 CORE_BASELINE='
 - COMMITS: No autonomous commits.
-- RTK: Always prefix all shell commands with rtk.
-- VIBE CHECK: Scrutinize complex plans, ideas, and solutions with vibe_check.
-- EFFICIENCY: Observe your agent efficiency protocol from the kb.
-- SCANNABILITY: Organize information using elegant, well-structured, idiomatic markdown.
+- Optimize all operations for agent, token, and context efficiency.
+- Batch and parallelize as much as possible.
+- ALWAYS prefix ALL shell commands with rtk.
+- Use context mode tools for token and context optimizations.
+- Forbid copular verb forms.
+- Keep prose brief, concise, precise while maintaining clarity.
+- Optimize prose for token and context efficiency.
+- Use elegant, well-structured, idiomatic markdown.
 '
 readonly CORE_BASELINE
 
