@@ -27,6 +27,9 @@ cd packages/coding-agent && npm link
 
 ## Notes
 
-- Build order matters: `tui` → `ai` → `agent` → `coding-agent` must build first
-- `npm link` creates a global `pi` command pointing to `packages/coding-agent/dist/cli.js`
-- Native bindings are required on Linux glibc systems for `tailwindcss` and `@parcel/watcher`
+- Build order matters: `tui` → `ai` → `agent` → `coding-agent` must
+  build first
+- `npm link` creates a global `pi` command pointing to
+  `packages/coding-agent/dist/cli.js`
+- Native bindings are required on Linux glibc systems for `tailwindcss`
+  and `@parcel/watcher`
