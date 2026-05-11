@@ -11,9 +11,10 @@ Technology-agnostic knowledge base for autonomous agents.
 - `agent-protocols.md` - `MVP` checklist for evidence-based execution
 - `cloud-patterns.md` - Deployment, CI/CD, data storage, production
   readiness
-- `context-mode-routing-guide.md` - Mandatory context-mode routing rules
-  for agent, token, and context efficiency
-- `custom-pi-agent-guide.md` - Reference guide for writing custom pi agents
+- `context-mode-guide.md` - Mandatory routing rules and tool selection
+  hierarchy for context window protection
+- `custom-pi-agent-guide.md` - Reference guide for writing custom pi
+  agents
 - `data-science-workflow.md` - 5-phase analysis workflow
 - `e-prime-protocol.md` - E-Prime communication rules
 - `engineering-principles.md` - Core engineering principles and testing
@@ -26,7 +27,8 @@ Technology-agnostic knowledge base for autonomous agents.
 - `RTK.md` - `RTK` usage rules and token-saving shell proxy reference
 - `rtk-build-install.md` - Building and installing `RTK` from source
 - `shell-scripting-guide.md` - POSIX-compliant shell scripting standards
-- `simplify-code-guide.md` - Heuristics for simplifying code while preserving behavior
+- `simplify-code-guide.md` - Heuristics for simplifying code while
+  preserving behavior
 - `spae-framework.md` - State-Persistent Atomic Execution framework
 - `SUBAGENTS.md` - Operational rules for efficient agent and tool use
 - `ui-ux-design.md` - UI/UX layout, typography, color, accessibility
