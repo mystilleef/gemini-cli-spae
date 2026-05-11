@@ -2,7 +2,7 @@
 # prettier-ignore
 name: review
 description: Perform a code review
-model: auto-gemini-3
+model: gemini-3.1-pro-preview
 max_turns: 100
 ---
 
