@@ -19,12 +19,19 @@ Invoke `vibe_check` autonomously at these critical checkpoints:
 
 ### 2. Contextual execution
 
-- **Full Context**: ALWAYS include the complete user prompt in the
-  `vibe_check` call.
-- **Phase Awareness**: Explicitly define the `phase` parameter:
-  - `preparation`: Strategy formulation.
-  - `implementation`: Code writing/modification.
-  - `review`: Verification and testing.
+Always include these required parameters:
+
+- **`goal`** (required): The agent's current goal — one concise
+  sentence. Example: `"Ship CPI v2.5"`
+- **`plan`** (required): The agent's detailed plan — numbered steps.
+  Example: `"1) tests 2) refactor 3) canary"`
+
+Optional but recommended:
+
+- **`userPrompt`**: The original user prompt verbatim.
+- **`progress`**: Work completed so far.
+- **`uncertainties`**: Array of open questions or risks.
+- **`taskContext`**: Background context for the current task.
 
 ### 3. Feedback integration
 
@@ -50,10 +57,7 @@ Treat these as violations:
   edits, or major architecture changes.
 - **Unneeded check**: `vibe_check` used on minor, routine, unambiguous,
   deterministic tasks.
-- **Missing context**: Call lacks full user prompt, goal, or key
-  constraints.
-- **Wrong phase**: Incorrect or missing `phase`
-  (`preparation|implementation|review`).
+- **Missing context**: Call lacks `goal`, `plan`, or key constraints.
 - **Ignored feedback**: Guidance not applied or explicitly rejected with
   rationale.
 - **Checkbox use**: `vibe_check` used ritualistically, not as a real
@@ -65,7 +69,7 @@ Treat these as violations:
 
 1. Pause.
 2. Name the violation.
-3. Re-run `vibe_check` with full context + correct phase.
+3. Re-run `vibe_check` with `goal`, `plan`, and full context.
 4. Apply guidance or record explicit rejection reason.
 5. Log reusable pattern via `vibe_learn`.
 
@@ -74,6 +78,7 @@ Treat these as violations:
 ```markdown
 1. Treat `vibe_check` as a pattern interrupt for course correction.
 2. Use at strategic points (Prepare -> Check -> Act).
-3. Include full user prompt and current phase.
+3. Always pass `goal` (required) and `plan` (required); include
+   `userPrompt` and `progress` when available.
 4. Chain `vibe_learn` to record resolved error patterns.
 ```

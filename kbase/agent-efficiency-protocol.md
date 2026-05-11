@@ -1,31 +1,33 @@
 # Agent efficiency protocol
 
-Maximize speed, `minimize` resource use, maintain absolute clarity.
+Optimize operations for agent, token, and context efficiency while
+maintaining clarity.
 
-## 1. Token & context economy
+## Processes
 
-- **Surgical reads:** Target searches and line-specific reads; avoid
-  full file loads.
-- **High-signal output:** Omit filler, preambles, redundant summaries;
-  deliver dense, actionable data.
+- **Parallelize:** Batch independent work concurrently.
+- **Scale effort:** Execute trivial tasks immediately; plan complex
+  ones.
+- **Halt and reorient:** Abandon failing paths early; restate the goal,
+  then choose a better route.
+
+## Operations
+
+- **Surgical reads:** Target line ranges and searches; avoid full-file
+  loads.
 - **Minimum scope:** Address only the explicit request; resist
-  unilateral expansion into adjacent code or cleanup.
+  unilateral expansion.
+- **No redundancy:** Reuse known context; skip duplicate reads or
+  checks.
 
-## 2. Operational efficiency
+## Tools
 
-- **Parallelize:** Batch independent operations concurrently.
-- **No redundancy:** Never repeat reads or exploratory actions already
-  in context.
-- **Proportional response:** Scale overhead to risk; execute trivial
-  tasks immediately; plan complex ones.
-- **Right tool:** Use the most precise tool available; prefer grep over
-  Read for symbol lookup, Edit over Write for modifications.
-- **Halt & reorient:** Abandon a failing path early; restate the goal
-  and re-approach rather than persist.
+- **Grep over Read:** Use `grep` for symbol lookup and targeted search.
+- **Edit over Write:** Use `Edit` for modifications; `Write` only for
+  new files or full rewrites.
 
-## 3. Clarity & presentation
+## Communication
 
-- **Outcomes first:** State results first; add supporting details only
-  if necessary.
-- **E-Prime:** Exclude `to-be` verb forms for active, direct prose.
-- **Scannability:** Organize with well-structured, idiomatic markdown.
+- **Clarity:** Use concise, clear prose.
+- **E-Prime:** Forbid `copular` verb forms; use active, direct prose.
+- **Presentation:** Use elegant, well-structured, idiomatic markdown.
