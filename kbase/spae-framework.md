@@ -29,8 +29,8 @@ prevent process inflation, agents maintaining or extending this
 framework must enforce these constraints:
 
 - **Protect the artifact limit**: Reject any proposal to add new files
-  beyond the core three.
-- **Scale detail to task size**: don't force large-process behavior
+  beyond the core three and the ephemeral `VERIFY.md` signal.
+- **Scale detail to task size**: do not force large-process behavior
   (heavy documentation) onto small tasks.
 - **Prefer codebase fit**: Reject speculative, new design in favor of
   existing patterns.
@@ -40,12 +40,12 @@ framework must enforce these constraints:
   directory. These artifacts maintain local execution state and do not
   belong in version control. Always ensure the project's `.gitignore`
   includes `.spae/`.
-- **Enforce phase write boundaries**: `/spec`, `/plan`, and `/review`
+- **Enforce phase write boundaries**: `/spec`, `/plan`, and `/inspect`
   may read repository code for context, but they may only write their
   designated `SPAE` artifacts. Only `/build`, `/tdd`, or `/execute` may
   edit source code, tests, configuration files, docs, or any other
   non-`SPAE` project file.
-- **Enforce one execution mode per `workstream`**: After `/review`,
+- **Enforce one execution mode per `workstream`**: After `/inspect`,
   users choose `/build`, `/tdd`, or `/execute`. They must not mix them
   within the same `workstream`.
 
@@ -79,13 +79,13 @@ root clutter and supports concurrent tasks.
    agent generates a slug (for example, `google-oauth-login`), creates
    the directory, and updates the `current` symlink.
 3. **Implicit resumption**: If the user omits the name during `/plan`,
-   `/review`, `/build`, `/tdd`, or `/execute`, the agent resolves the
+   `/inspect`, `/build`, `/tdd`, or `/execute`, the agent resolves the
    `current` symlink to locate the artifacts.
 
-## The three canonical artifacts
+## The canonical artifacts
 
-The framework restricts all state to exactly three files per
-`workstream`.
+The framework restricts all state to three core files and one ephemeral
+signal per `workstream`.
 
 ### 1. `STATE.json` (The execution cursor)
 
@@ -137,21 +137,31 @@ during the execution phase (`/build`, `/tdd`, or `/execute`).
 - **Acceptance criteria**: Outcomes, not implementation steps.
 - **Verify**: Concrete commands or steps to prove success.
 
+### 4. `VERIFY.md` (The ephemeral signal)
+
+Created only when `/verify` detects gaps between implementation and
+specification. Contains technical findings, bugs, and optimizations.
+`/spec` consumes this file to trigger a revision cycle. `/verify`
+deletes this file upon a successful pass.
+
 ## The execution loop
 
 Users orchestrate the workflow by manually invoking these skills in
-sequence. After `/review`, they pick exactly one execution skill for the
-workstream: `/build` for direct atomic execution, `/tdd` for
+sequence. After `/inspect`, they pick exactly one execution skill for
+the workstream: `/build` for direct atomic execution, `/tdd` for
 failing-test-first execution, or `/execute` for comprehensive execution.
 
-### Step 1: `/spec` (Requirements engineering)
+### Step 1: `/spec` (Smart entry & requirements)
 
-- **Input**: Raw user prompt + existing `SPEC.md` + codebase context.
-- **Action**: Distills the request into unambiguous requirements. Makes
-  the smallest safe change to the system description. Reads repository
-  code for context only.
-- **Output**: Overwrites `SPEC.md`. Initializes `STATE.json` with
-  `phase: plan`. Updates `.spae/current`.
+- **Input**: `STATE.json` + `VERIFY.md` (if present) + `SPEC.md` + raw
+  user prompt + codebase context.
+- **Action**: Checks `STATE.json` first. If `status` equals
+  `revision_required`, enters revision mode, reads `VERIFY.md`, and
+  updates `SPEC.md` to address findings. If `status` equals `completed`
+  or empty, initializes a new workstream. Distills requests into
+  unambiguous requirements. Reads repository code for context only.
+- **Output**: Overwrites `SPEC.md`. Updates `STATE.json` with
+  `phase: plan` and `status: active`. Updates `.spae/current`.
 - **Write scope**: `SPEC.md`, `STATE.json`, `.spae/current`, and the
   `workstream` directory structure required to create them.
 - **Forbidden writes**: Source code, tests, configuration files, docs,
@@ -165,12 +175,12 @@ failing-test-first execution, or `/execute` for comprehensive execution.
   each task leaves the system in a working state. Treats repository code
   as read-only.
 - **Output**: Overwrites `PLAN.md`. Initializes the `tasks` registry in
-  `STATE.json`. Updates `STATE.json` phase to `review`.
+  `STATE.json`. Updates `STATE.json` phase to `inspect`.
 - **Write scope**: `PLAN.md` and `STATE.json`.
 - **Forbidden writes**: Source code, tests, configuration files, docs,
   `SPEC.md`, and any other non-`SPAE` project file.
 
-### Step 3: `/review` (Optimization and verification)
+### Step 3: `/inspect` (Optimization and verification)
 
 - **Input**: `SPEC.md` + `PLAN.md` + optional source-code context.
 - **Action**: Performs gap analysis. Prioritizes concrete bugs,
@@ -180,14 +190,14 @@ failing-test-first execution, or `/execute` for comprehensive execution.
   analysis only.
 - **Output**: Overwrites `PLAN.md` with the optimized version. Updates
   `STATE.json` phase to `build`, which signals execution readiness for
-  either `/build` or `/tdd`.
+  `/build`, `/tdd`, or `/execute`.
 - **Write scope**: `PLAN.md` and `STATE.json`.
 - **Forbidden writes**: Source code, tests, configuration files, docs,
   `SPEC.md`, and any other non-`SPAE` project file.
 
 ### Step 4: Execution (`/build`, `/tdd`, or `/execute`)
 
-Choose one execution skill per `workstream` after `/review`. All skills
+Choose one execution skill per `workstream` after `/inspect`. All skills
 read the same `STATE.json` cursor and the same active task from
 `PLAN.md`. Both `/build` and `/tdd` advance the `workstream` one atomic
 task at a time, while `/execute` processes all tasks in the plan
@@ -203,8 +213,9 @@ sequentially. Avoid alternating between them within the same
   exclusive authority to edit source code and other non-`SPAE` project
   files.
 - **Output**: Mutates source code. Updates the `tasks` registry in
-  `STATE.json` to mark the task as `done`. Advances the cursor. The
-  agent never edits `PLAN.md` during this phase.
+  `STATE.json` to mark the task as `done`. Advances the cursor. If the
+  plan concludes, updates `phase: verify`. The agent never edits
+  `PLAN.md` during this phase.
 
 #### Option B: `/tdd` (Test-first atomic execution)
 
@@ -216,7 +227,8 @@ sequentially. Avoid alternating between them within the same
   behavioral changes where explicit test-first proof adds clarity.
 - **Output**: Mutates source code and tests. Updates the `tasks`
   registry in `STATE.json` to mark the task as `done`. Advances the
-  cursor. The agent never edits `PLAN.md` during this phase.
+  cursor. If the plan concludes, updates `phase: verify`. The agent
+  never edits `PLAN.md` during this phase.
 
 #### Option C: `/execute` (Comprehensive execution)
 
@@ -227,9 +239,8 @@ sequentially. Avoid alternating between them within the same
   task. Holds exclusive authority to edit source code and other
   non-`SPAE` project files.
 - **Output**: Mutates source code. Updates the `tasks` registry in
-  `STATE.json` to mark all completed tasks as `done`. Advances the
-  cursor to the end of the plan. The agent never edits `PLAN.md` during
-  this phase.
+  `STATE.json` to mark all completed tasks as `done`. Updates
+  `phase: verify`. The agent never edits `PLAN.md` during this phase.
 
 #### Selection guidance
 
@@ -242,3 +253,76 @@ sequentially. Avoid alternating between them within the same
   well-defined features where manual step-by-step orchestration adds
   more overhead than value.
 - Keep the choice stable for the whole `workstream`.
+
+### Step 5: `/verify` (The arbiter)
+
+- **Input**: `SPEC.md` + source code.
+- **Action**: Compares implementation against `SPEC.md`. Inspects for
+  gaps, regressions, and optimizations. Acts as the final arbiter of
+  workstream completion.
+- **Output (Fail)**: Creates `VERIFY.md` with detailed findings. Updates
+  `STATE.json` with `status: revision_required` and `phase: spec`.
+- **Output (Pass)**: Deletes `VERIFY.md`. Updates `STATE.json` with
+  `status: completed` and `phase: done`.
+- **Write scope**: `VERIFY.md` and `STATE.json`.
+- **Forbidden writes**: Source code, tests, configuration files, docs,
+  `SPEC.md`, `PLAN.md`, and any other non-`SPAE` project file.
+
+## Standardized output and feedback
+
+Every SPAE skill must output a structured summary and status block upon
+completion. This ensures consistent communication and clear next steps.
+
+### 1. Execution summary
+
+Provide a terse, three-point summary of the work performed.
+
+```markdown
+### Execution Summary
+
+- **Actions**: [Terse description of actions taken]
+- **Files**: [List of modified or created files]
+- **Findings**: [Key technical findings, bugs, or blockers]
+```
+
+### 2. SPAE status blocks
+
+Use Markdown blockquotes to display the current workstream state and the
+required next command.
+
+#### A. Task Execution Feedback (After `/build` or `/tdd`)
+
+```markdown
+> **SPAE Status** • `workstream-name` **Progress**: Task [X] of [Y] ([Z]
+> remaining) **Completed**: `T-XXX` - [Task title] **Next Task**:
+> `T-YYY` - [Next task title]
+>
+> _Run `/build` (or `/tdd`) to execute the next task._
+```
+
+#### B. Comprehensive Execution Feedback (After `/execute`)
+
+```markdown
+> **SPAE Status** • `workstream-name` **Progress**: All [X] tasks
+> completed **Completed**: `T-001` through `T-XXX` **Next Phase**:
+> `/verify`
+>
+> _Run `/verify` to validate the implementation against the
+> specification._
+```
+
+#### C. Phase Transition Feedback (After `/spec`, `/plan`, or `/inspect`)
+
+```markdown
+> **SPAE Status** • `workstream-name` **Phase Complete**:
+> `/[current-phase]` **Next Phase**: `/[next-phase]`
+>
+> _Run `/[next-phase]` to [brief description of next phase goal]._
+```
+
+#### D. Workstream completion feedback (After successful `/verify`)
+
+```markdown
+> **SPAE Status** • `workstream-name` **Phase Complete**: `/verify`
+> (Pass) **Result**: Workstream completed successfully.
+```
