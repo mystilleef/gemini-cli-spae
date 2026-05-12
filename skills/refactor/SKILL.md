@@ -39,12 +39,19 @@ Determine input by one of the following:
 
 - **Simplify Aggressively**: Delete dead code, inline trivial wrappers,
   and replace nested conditionals with guard clauses.
-- **Enforce Clarity**: Assign descriptive, domain-specific names.
-  Replace magic values with named constants.
-- **Isolate Responsibilities**: Extract functions for reused logic or
-  distinct concepts. Enforce single responsibility.
-- **Minimize Duplication**: Apply `DRY` principles judiciously without
-  over-abstracting.
+- **Collapse Bad Abstractions**: Remove leaky or over-engineered
+  abstractions. Flatten when indirection costs more than it saves.
+- **Clarify Names**: Assign descriptive, domain-specific names. Replace
+  magic values with named constants.
+- **Isolate Responsibilities**: Extract functions for distinct concepts.
+  Enforce single responsibility per unit.
+- **Minimize Duplication**: Apply `DRY` judiciously—deduplicate when
+  copies likely diverge accidentally rather than differ intentionally.
+- **Reduce Coupling**: Reduce dependencies between modules. Prefer
+  dependency injection over hard-wired references. Break cycles.
+- **Organize by Abstraction**: Group related functions. Order
+  definitions from high-level to low-level. Put the happy path before
+  edge cases.
 
 ## Constraints
 
@@ -67,7 +74,7 @@ Determine input by one of the following:
 
 - Keep feedback prose terse, concise, and precise.
 - Optimize prose for token and context efficiency.
-- If needed, split findings and summary into terse bullet points.
+- If necessary, split findings and summary into terse bullet points.
 
 <!-- prettier-ignore-start -->
 ```md
